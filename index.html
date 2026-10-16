@@ -315,7 +315,8 @@
     </div>
     <script>
         // BASE DE DATOS OFICIAL SEGÚN PDF DE FOGÓN CON CONTROL DE AGOTADOS (agotado: true/false)
-        const menuOriginal = [
+        const menuOriginal = [... ];
+        let productos = JSON.parse(localStorage.getItem('fogon_productos')) || menuOriginal;
     // ENTRADAS
     { id: 1, categoria: "ENTRADAS", nombre: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo con tocino", precio: 5.99, disponible: true },
     { id: 2, categoria: "ENTRADAS", nombre: "Patacones con queso", desc: "Porción de patacones con queso rallado", precio: 5.99, disponible: true },
