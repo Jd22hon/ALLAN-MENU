@@ -315,50 +315,88 @@
     </div>
     <script>
         // BASE DE DATOS OFICIAL SEGÚN PDF DE FOGÓN CON CONTROL DE AGOTADOS (agotado: true/false)
-        const dbMenu = [
-            // ENTRADAS
-            { id: 1, cat: "entradas", name: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo, acompañadas de tocino.", price: 5.99, sides: false, agotado: false },
-            { id: 2, cat: "entradas", name: "Patacones con Queso", desc: "Porción de patacones crujientes con queso rallado.", price: 5.99, sides: false, agotado: false },
-            { id: 3, cat: "entradas", name: "Chorizo Parrillero", desc: "3 chorizos parrilleros al grill con chimichurri y ensalada.", price: 4.03, sides: false, agotado: false },
+        const menuOriginal = [
+    // ENTRADAS
+    { id: 1, categoria: "ENTRADAS", nombre: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo con tocino", precio: 5.99, disponible: true },
+    { id: 2, categoria: "ENTRADAS", nombre: "Patacones con queso", desc: "Porción de patacones con queso rallado", precio: 5.99, disponible: true },
+    { id: 3, categoria: "ENTRADAS", nombre: "Porción de chorizo parrillero", desc: "3 chorizos al grill con chimichurri y ensalada", precio: 4.03, disponible: true },
+    
+    // ESPECIALES
+    { id: 4, categoria: "ESPECIALES", nombre: "Lomo fino con papa gratinada", desc: "Lomo al grill con papa cocida, bechamel y mozzarella", precio: 17.33, disponible: true },
+    { id: 5, categoria: "ESPECIALES", nombre: "Lomo fino a la pimienta con arroz al pesto", desc: "Salsa de pimienta, arroz al pesto y papas fritas", precio: 17.33, disponible: true },
+    { id: 6, categoria: "ESPECIALES", nombre: "Lasaña de carne", desc: "Pasta rellena con carne, mozzarella y crema bechamel", precio: 9.20, disponible: true },
 
-            // ESPECIALES
-            { id: 4, cat: "especiales", name: "Lomo fino con papa gratinada", desc: "Lomo al grill con papa cocinada en crema bechamel y mozzarella.", price: 17.33, sides: false, agotado: false },
-            { id: 5, cat: "especiales", name: "Lomo fino a la pimienta con arroz al pesto", desc: "Bañado en salsa de pimienta, con arroz al pesto y papas fritas.", price: 17.33, sides: false, agotado: false },
-            { id: 6, cat: "especiales", name: "Lasaña de carne", desc: "Pasta rellena de carne, mozzarella y crema bechamel.", price: 9.20, sides: false, agotado: false },
+    // PLATOS FUERTES - LOMO FINO DE RES
+    { id: 7, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+    { id: 8, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+    { id: 9, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 15.93, disponible: true },
+    { id: 10, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 14.99, disponible: true },
+    { id: 11, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Clásico", desc: "Acompañado de moro clásico", precio: 14.99, disponible: true },
+    { id: 12, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
+    { id: 13, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Ensalada y papas fritas", desc: "Acompañado de ensalada y papas fritas", precio: 14.99, disponible: true },
 
-            // CORTES & RES PREMIUM
-            { id: 7, cat: "cortes", name: "Picaña 350 GR", desc: "Corte jugoso y tierno asado a la parrilla.", price: 21.85, sides: true, agotado: false },
-            { id: 8, cat: "cortes", name: "Bife de Chorizo 350 GR", desc: "Clásico corte argentino de gran sabor.", price: 21.85, sides: true, agotado: false },
-            { id: 9, cat: "cortes", name: "Ribeye 350 GR", desc: "Excepcional marmoleo y jugosidad al grill.", price: 19.55, sides: true, agotado: false },
-            { id: 10, cat: "cortes", name: "T-Bone 350 GR", desc: "Lo mejor del lomo y el bife en un solo corte.", price: 19.55, sides: true, agotado: false },
-            { id: 11, cat: "cortes", name: "Matambre de Cerdo 350 GR", desc: "Cerdo premium asado al carbón.", price: 14.66, sides: false, agotado: false },
-            { id: 12, cat: "cortes", name: "Costillas Ahumadas BBQ (1 lb)", desc: "1 libra de costillas ahumadas al grill en salsa BBQ.", price: 17.50, sides: true, agotado: false },
+    // PLATOS FUERTES - COSTILLA DE CERDO
+    { id: 14, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+    { id: 15, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+    { id: 16, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 12.07, disponible: true },
+    { id: 17, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 10.35, disponible: true },
+    { id: 18, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
 
-            // PLATOS FUERTES
-            { id: 13, cat: "fuertes", name: "Lomo Fino de Res", desc: "Tierno lomo de res con opción de guarnición.", price: 15.93, sides: true, agotado: false },
-            { id: 14, cat: "fuertes", name: "Costilla de Cerdo", desc: "Costilla tierna asada a las brasas.", price: 12.07, sides: true, agotado: false },
-            { id: 15, cat: "fuertes", name: "Pollo de Grill", desc: "Pechuga marinada y asada al carbón.", price: 10.93, sides: true, agotado: false },
-            { id: 16, cat: "fuertes", name: "Chuleta de Cerdo", desc: "Jugosa chuleta a la parrilla.", price: 12.07, sides: true, agotado: false },
+    // PLATOS FUERTES - POLLO DE GRILL
+    { id: 19, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 12.07, disponible: true },
+    { id: 20, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 10.93, disponible: true },
+    { id: 21, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 10.93, disponible: true },
+    { id: 22, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 9.20, disponible: true },
 
-            // MARISCOS
-            { id: 17, cat: "mariscos", name: "Majarisco", desc: "Mariscos con verde majado y toque Fogón.", price: 17.33, sides: false, agotado: false },
-            { id: 18, cat: "mariscos", name: "Sudado de Mariscos", desc: "Guiso tradicional al vapor con jugos marinos.", price: 17.33, sides: false, agotado: false },
-            { id: 19, cat: "mariscos", name: "Arroz Marinero", desc: "Arroz mezclado con variedad de mariscos frescos.", price: 15.53, sides: false, agotado: false },
-            { id: 20, cat: "mariscos", name: "Arroz con Cangrejo", desc: "Arroz salteado con exquisita carne de cangrejo.", price: 14.95, sides: false, agotado: false },
-            { id: 21, cat: "mariscos", name: "Arroz con Camarón", desc: "Arroz sabroso con camarones seleccionados.", price: 14.95, sides: false, agotado: false },
+    // PLATOS FUERTES - CHULETA DE CERDO
+    { id: 23, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+    { id: 24, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+    { id: 25, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
 
-            // MENÚ DE NIÑOS
-            { id: 22, cat: "ninos", name: "Nuggets de pollo", desc: "Pollo apanado sobre lechuga con papas fritas.", price: 5.99, sides: false, agotado: false },
-            { id: 23, cat: "ninos", name: "Papas fritas con chorizo", desc: "Chorizo a la parrilla con crujientes papas fritas.", price: 5.99, sides: false, agotado: false },
+    // PLATOS FUERTES - PICUDO AL GRILL
+    { id: 26, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+    { id: 27, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+    { id: 28, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
 
-            // BEBIDAS & BAR
-            { id: 24, cat: "bebidas", name: "Limonada Imperial", desc: "Bebida cítrica refrescante de la casa.", price: 3.45, sides: false, agotado: false },
-            { id: 25, cat: "bebidas", name: "Jarra de Jugo de Naranja", desc: "Jugo natural exprimido.", price: 8.05, sides: false, agotado: false },
-            { id: 26, cat: "bebidas", name: "Cerveza Club Verde / Corona / Heineken", desc: "Cerveza helada nacional o importada.", price: 3.99, sides: false, agotado: false },
-            { id: 27, cat: "bebidas", name: "Mojito / Margarita / Piña Colada", desc: "Coctelería tropical de la barra.", price: 7.99, sides: false, agotado: false },
-            { id: 28, cat: "bebidas", name: "Copa de Sangría", desc: "Sangría de la casa.", price: 5.18, sides: false, agotado: false }
-        ];
+    // CORTES PREMIUM
+    { id: 29, categoria: "CORTES PREMIUM", nombre: "Picaña 350 GR", desc: "Corte premium a la parrilla", precio: 21.85, disponible: true },
+    { id: 30, categoria: "CORTES PREMIUM", nombre: "Bife de Chorizo 350 GR", desc: "Corte jugoso y selecto", precio: 21.85, disponible: true },
+    { id: 31, categoria: "CORTES PREMIUM", nombre: "Ribeye 350 GR", desc: "Excelente marmoleado al grill", precio: 19.55, disponible: true },
+    { id: 32, categoria: "CORTES PREMIUM", nombre: "T-Bone 350 GR", desc: "El balance perfecto entre lomo y filete", precio: 19.55, disponible: true },
+    { id: 33, categoria: "CORTES PREMIUM", nombre: "Matambre de Cerdo 350 GR", desc: "Corte de cerdo premium", precio: 14.66, disponible: true },
 
+    // COSTILLAS AHUMADAS BBQ
+    { id: 34, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Tacu Tacu", desc: "1 libra de costillas ahumadas con Tacu Tacu", precio: 17.50, disponible: true },
+    { id: 35, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Moro Choclo", desc: "1 libra de costillas ahumadas con Moro Choclo", precio: 16.50, disponible: true },
+    { id: 36, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Arroz y menestra", desc: "1 libra de costillas ahumadas con arroz y menestra", precio: 14.50, disponible: true },
+    { id: 37, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Ensalada y papas fritas", desc: "1 libra de costillas ahumadas con ensalada y papas", precio: 14.50, disponible: true },
+
+    // GUARNICIONES
+    { id: 38, categoria: "GUARNICIONES", nombre: "Tacu Tacu", desc: "Porción de tacu tacu", precio: 6.33, disponible: true },
+    { id: 39, categoria: "GUARNICIONES", nombre: "Papa gratinada", desc: "Con bechamel y queso", precio: 5.75, disponible: true },
+    { id: 40, categoria: "GUARNICIONES", nombre: "Moro Fogón", desc: "Moro especial de la casa", precio: 5.18, disponible: true },
+    { id: 41, categoria: "GUARNICIONES", nombre: "Papas fritas", desc: "Porción crujiente", precio: 4.25, disponible: true },
+    { id: 42, categoria: "GUARNICIONES", nombre: "Porción de arroz", desc: "Arroz blanco", precio: 1.73, disponible: true },
+    { id: 43, categoria: "GUARNICIONES", nombre: "Porción de menestra", desc: "Menestra del día", precio: 2.50, disponible: true },
+
+    // MARISCOS
+    { id: 44, categoria: "MARISCOS", nombre: "Majarisco", desc: "Mariscos con verde majado y toque de Fogón", precio: 17.33, disponible: true },
+    { id: 45, categoria: "MARISCOS", nombre: "Arroz con cangrejo", desc: "Combinación de arroz y carne de cangrejo", precio: 14.95, disponible: true },
+    { id: 46, categoria: "MARISCOS", nombre: "Sudado de mariscos", desc: "Guiso tradicional al vapor con jugos de mariscos", precio: 17.33, disponible: true },
+    { id: 47, categoria: "MARISCOS", nombre: "Arroz marinero", desc: "Arroz con variedad de mariscos", precio: 15.53, disponible: true },
+    { id: 48, categoria: "MARISCOS", nombre: "Arroz con camarón", desc: "Delicioso arroz con camarones selectos", precio: 14.95, disponible: true },
+
+    // MENÚ DE NIÑOS
+    { id: 49, categoria: "MENÚ DE NIÑOS", nombre: "Nuggets de pollo", desc: "Pollo apanado sobre cama de lechuga con papas fritas", precio: 5.99, disponible: true },
+    { id: 50, categoria: "MENÚ DE NIÑOS", nombre: "Papas fritas con chorizo", desc: "Chorizo a la parrilla con crujientes papas fritas", precio: 5.99, disponible: true },
+
+    // BEBIDAS & COcteles
+    { id: 51, categoria: "BEBIDAS", nombre: "Gaseosa", desc: "Bebida personal", precio: 1.44, disponible: true },
+    { id: 52, categoria: "BEBIDAS", nombre: "Limonada Imperial", desc: "Refrescante limonada de la casa", precio: 3.45, disponible: true },
+    { id: 53, categoria: "BEBIDAS", nombre: "Jarra de jugo de naranja", desc: "Natural y recién exprimido", precio: 8.05, disponible: true },
+    { id: 54, categoria: "BEBIDAS", nombre: "Mojito", desc: "Cóctel tradicional de barra", precio: 7.99, disponible: true },
+    { id: 55, categoria: "BEBIDAS", nombre: "Piña Colada", desc: "Cóctel tropical", precio: 7.99, disponible: true }
+];
         let carrito = [];
         let itemTemporal = null;
 
@@ -509,10 +547,11 @@
         }
     </script>
     <!-- BOTÓN Y PANEL DE ADMINISTRADOR / MODERADOR -->
-<div style="text-align: center; margin: 20px 0;">
-  <button onclick="accederAdmin()" style="background: #333; color: #888; border: 1px solid #555; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;">
-    🔐 Modo Moderador
-  </button>
+<!-- BOTÓN DE MODERADOR -->
+<div style="text-align: center; margin-top: 15px;">
+    <button onclick="accederAdmin()" style="background: #333; color: #aaa; border: 1px solid #555; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;">
+        🔐 Modo Moderador
+    </button>
 </div>
 
 <!-- CONTENEDOR DEL PANEL DE CONTROL (Oculto por defecto) -->
@@ -553,9 +592,87 @@
 
   // LISTA INICIAL DE PRODUCTOS (Se guarda en la memoria local del navegador)
   let productos = JSON.parse(localStorage.getItem('fogon_productos')) || [
-    { id: 1, nombre: "Hamburguesa Clásica", precio: 4.00, disponible: true },
-    { id: 2, nombre: "Hamburguesa Doble Queso", precio: 5.50, disponible: true },
-    { id: 3, nombre: "Papas Fritas", precio: 2.50, disponible: true }
+    // ENTRADAS
+    { id: 1, categoria: "ENTRADAS", nombre: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo con tocino", precio: 5.99, disponible: true },
+    { id: 2, categoria: "ENTRADAS", nombre: "Patacones con queso", desc: "Porción de patacones con queso rallado", precio: 5.99, disponible: true },
+    { id: 3, categoria: "ENTRADAS", nombre: "Porción de chorizo parrillero", desc: "3 chorizos al grill con chimichurri y ensalada", precio: 4.03, disponible: true },
+    
+    // ESPECIALES
+    { id: 4, categoria: "ESPECIALES", nombre: "Lomo fino con papa gratinada", desc: "Lomo al grill con papa cocida, bechamel y mozzarella", precio: 17.33, disponible: true },
+    { id: 5, categoria: "ESPECIALES", nombre: "Lomo fino a la pimienta con arroz al pesto", desc: "Salsa de pimienta, arroz al pesto y papas fritas", precio: 17.33, disponible: true },
+    { id: 6, categoria: "ESPECIALES", nombre: "Lasaña de carne", desc: "Pasta rellena con carne, mozzarella y crema bechamel", precio: 9.20, disponible: true },
+
+    // PLATOS FUERTES - LOMO FINO DE RES
+    { id: 7, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+    { id: 8, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+    { id: 9, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 15.93, disponible: true },
+    { id: 10, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 14.99, disponible: true },
+    { id: 11, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Clásico", desc: "Acompañado de moro clásico", precio: 14.99, disponible: true },
+    { id: 12, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
+    { id: 13, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Ensalada y papas fritas", desc: "Acompañado de ensalada y papas fritas", precio: 14.99, disponible: true },
+
+    // PLATOS FUERTES - COSTILLA DE CERDO
+    { id: 14, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+    { id: 15, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+    { id: 16, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 12.07, disponible: true },
+    { id: 17, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 10.35, disponible: true },
+    { id: 18, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
+
+    // PLATOS FUERTES - POLLO DE GRILL
+    { id: 19, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 12.07, disponible: true },
+    { id: 20, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 10.93, disponible: true },
+    { id: 21, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 10.93, disponible: true },
+    { id: 22, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 9.20, disponible: true },
+
+    // PLATOS FUERTES - CHULETA DE CERDO
+    { id: 23, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+    { id: 24, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+    { id: 25, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
+
+    // PLATOS FUERTES - PICUDO AL GRILL
+    { id: 26, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+    { id: 27, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+    { id: 28, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
+
+    // CORTES PREMIUM
+    { id: 29, categoria: "CORTES PREMIUM", nombre: "Picaña 350 GR", desc: "Corte premium a la parrilla", precio: 21.85, disponible: true },
+    { id: 30, categoria: "CORTES PREMIUM", nombre: "Bife de Chorizo 350 GR", desc: "Corte jugoso y selecto", precio: 21.85, disponible: true },
+    { id: 31, categoria: "CORTES PREMIUM", nombre: "Ribeye 350 GR", desc: "Excelente marmoleado al grill", precio: 19.55, disponible: true },
+    { id: 32, categoria: "CORTES PREMIUM", nombre: "T-Bone 350 GR", desc: "El balance perfecto entre lomo y filete", precio: 19.55, disponible: true },
+    { id: 33, categoria: "CORTES PREMIUM", nombre: "Matambre de Cerdo 350 GR", desc: "Corte de cerdo premium", precio: 14.66, disponible: true },
+
+    // COSTILLAS AHUMADAS BBQ
+    { id: 34, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Tacu Tacu", desc: "1 libra de costillas ahumadas con Tacu Tacu", precio: 17.50, disponible: true },
+    { id: 35, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Moro Choclo", desc: "1 libra de costillas ahumadas con Moro Choclo", precio: 16.50, disponible: true },
+    { id: 36, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Arroz y menestra", desc: "1 libra de costillas ahumadas con arroz y menestra", precio: 14.50, disponible: true },
+    { id: 37, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Ensalada y papas fritas", desc: "1 libra de costillas ahumadas con ensalada y papas", precio: 14.50, disponible: true },
+
+    // GUARNICIONES
+    { id: 38, categoria: "GUARNICIONES", nombre: "Tacu Tacu", desc: "Porción de tacu tacu", precio: 6.33, disponible: true },
+    { id: 39, categoria: "GUARNICIONES", nombre: "Papa gratinada", desc: "Con bechamel y queso", precio: 5.75, disponible: true },
+    { id: 40, categoria: "GUARNICIONES", nombre: "Moro Fogón", desc: "Moro especial de la casa", precio: 5.18, disponible: true },
+    { id: 41, categoria: "GUARNICIONES", nombre: "Papas fritas", desc: "Porción crujiente", precio: 4.25, disponible: true },
+    { id: 42, categoria: "GUARNICIONES", nombre: "Porción de arroz", desc: "Arroz blanco", precio: 1.73, disponible: true },
+    { id: 43, categoria: "GUARNICIONES", nombre: "Porción de menestra", desc: "Menestra del día", precio: 2.50, disponible: true },
+
+    // MARISCOS
+    { id: 44, categoria: "MARISCOS", nombre: "Majarisco", desc: "Mariscos con verde majado y toque de Fogón", precio: 17.33, disponible: true },
+    { id: 45, categoria: "MARISCOS", nombre: "Arroz con cangrejo", desc: "Combinación de arroz y carne de cangrejo", precio: 14.95, disponible: true },
+    { id: 46, categoria: "MARISCOS", nombre: "Sudado de mariscos", desc: "Guiso tradicional al vapor con jugos de mariscos", precio: 17.33, disponible: true },
+    { id: 47, categoria: "MARISCOS", nombre: "Arroz marinero", desc: "Arroz con variedad de mariscos", precio: 15.53, disponible: true },
+    { id: 48, categoria: "MARISCOS", nombre: "Arroz con camarón", desc: "Delicioso arroz con camarones selectos", precio: 14.95, disponible: true },
+
+    // MENÚ DE NIÑOS
+    { id: 49, categoria: "MENÚ DE NIÑOS", nombre: "Nuggets de pollo", desc: "Pollo apanado sobre cama de lechuga con papas fritas", precio: 5.99, disponible: true },
+    { id: 50, categoria: "MENÚ DE NIÑOS", nombre: "Papas fritas con chorizo", desc: "Chorizo a la parrilla con crujientes papas fritas", precio: 5.99, disponible: true },
+
+    // BEBIDAS & COcteles
+    { id: 51, categoria: "BEBIDAS", nombre: "Gaseosa", desc: "Bebida personal", precio: 1.44, disponible: true },
+    { id: 52, categoria: "BEBIDAS", nombre: "Limonada Imperial", desc: "Refrescante limonada de la casa", precio: 3.45, disponible: true },
+    { id: 53, categoria: "BEBIDAS", nombre: "Jarra de jugo de naranja", desc: "Natural y recién exprimido", precio: 8.05, disponible: true },
+    { id: 54, categoria: "BEBIDAS", nombre: "Mojito", desc: "Cóctel tradicional de barra", precio: 7.99, disponible: true },
+    { id: 55, categoria: "BEBIDAS", nombre: "Piña Colada", desc: "Cóctel tropical", precio: 7.99, disponible: true }
+];
   ];
 
   let historialPedidos = JSON.parse(localStorage.getItem('fogon_pedidos')) || [];
