@@ -508,5 +508,154 @@
             window.open(`https://wa.me/593992191545?text=${msg}`, '_blank');
         }
     </script>
+    <!-- BOTÓN Y PANEL DE ADMINISTRADOR / MODERADOR -->
+<div style="text-align: center; margin: 20px 0;">
+  <button onclick="accederAdmin()" style="background: #333; color: #888; border: 1px solid #555; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;">
+    🔐 Modo Moderador
+  </button>
+</div>
+
+<!-- CONTENEDOR DEL PANEL DE CONTROL (Oculto por defecto) -->
+<div id="panelAdmin" style="display: none; background: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 600px; border: 2px solid #ff5722;">
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
+    <h2 style="margin: 0; color: #ff5722; font-size: 1.4rem;">🛠️ Panel de Control - FOGON</h2>
+    <button onclick="cerrarAdmin()" style="background: #d32f2f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar Panel</button>
+  </div>
+
+  <!-- PESTAÑAS DEL PANEL -->
+  <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <button onclick="verPestana('productos')" style="flex: 1; padding: 8px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">📦 Gestor de Productos</button>
+    <button onclick="verPestana('pedidos')" style="flex: 1; padding: 8px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">📋 Pedidos Generados (<span id="countPedidos">0</span>)</button>
+  </div>
+
+  <!-- SECCIÓN 1: GESTIÓN DE PRODUCTOS Y DISPONIBILIDAD -->
+  <div id="seccionProductos">
+    <h3>Gestión de Disponibilidad y Precios</h3>
+    <div id="listaAdminProductos">
+      <!-- Los productos se cargan dinámicamente aquí -->
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: HISTORIAL DE PEDIDOS -->
+  <div id="seccionPedidos" style="display: none;">
+    <h3>Registro de Pedidos Recibidos</h3>
+    <div id="listaAdminPedidos" style="max-height: 300px; overflow-y: auto;">
+      <p style="color: #888;">No hay pedidos registrados todavía.</p>
+    </div>
+    <button onclick="limpiarPedidos()" style="margin-top: 10px; background: #444; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Limpiar Historial</button>
+  </div>
+</div>
+
+<!-- SCRIPT DE FUNCIONAMIENTO DEL PANEL -->
+<script>
+  // CLAVE DE ACCESO DEL MODERADOR
+  const CLAVE_MODERADOR = "1234"; // 👈 Cambia aquí tu contraseña de acceso
+
+  // LISTA INICIAL DE PRODUCTOS (Se guarda en la memoria local del navegador)
+  let productos = JSON.parse(localStorage.getItem('fogon_productos')) || [
+    { id: 1, nombre: "Hamburguesa Clásica", precio: 4.00, disponible: true },
+    { id: 2, nombre: "Hamburguesa Doble Queso", precio: 5.50, disponible: true },
+    { id: 3, nombre: "Papas Fritas", precio: 2.50, disponible: true }
+  ];
+
+  let historialPedidos = JSON.parse(localStorage.getItem('fogon_pedidos')) || [];
+
+  function guardarDatos() {
+    localStorage.setItem('fogon_productos', JSON.stringify(productos));
+    localStorage.setItem('fogon_pedidos', JSON.stringify(historialPedidos));
+    renderizarAdmin();
+  }
+
+  function accederAdmin() {
+    const pass = prompt("Ingrese la clave de moderador:");
+    if (pass === CLAVE_MODERADOR) {
+      document.getElementById('panelAdmin').style.display = 'block';
+      renderizarAdmin();
+    } else if (pass !== null) {
+      alert("Clave incorrecta.");
+    }
+  }
+
+  function cerrarAdmin() {
+    document.getElementById('panelAdmin').style.display = 'none';
+  }
+
+  function verPestana(pestana) {
+    document.getElementById('seccionProductos').style.display = (pestana === 'productos') ? 'block' : 'none';
+    document.getElementById('seccionPedidos').style.display = (pestana === 'pedidos') ? 'block' : 'none';
+  }
+
+  function toggleDisponible(id) {
+    const prod = productos.find(p => p.id === id);
+    if (prod) {
+      prod.disponible = !prod.disponible;
+      guardarDatos();
+    }
+  }
+
+  function cambiarPrecio(id, nuevoPrecio) {
+    const prod = productos.find(p => p.id === id);
+    if (prod && !isNaN(nuevoPrecio) && nuevoPrecio > 0) {
+      prod.precio = parseFloat(nuevoPrecio);
+      guardarDatos();
+    }
+  }
+
+  function renderizarAdmin() {
+    // Renderizar Productos
+    const contenedorProds = document.getElementById('listaAdminProductos');
+    contenedorProds.innerHTML = "";
+
+    productos.forEach(p => {
+      const item = document.createElement('div');
+      item.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #222; padding: 10px; margin-bottom: 8px; border-radius: 6px;";
+      item.innerHTML = `
+        <div>
+          <strong>${p.nombre}</strong><br>
+          <small>Precio: $</small>
+          <input type="number" step="0.5" value="${p.precio.toFixed(2)}" onchange="cambiarPrecio(${p.id}, this.value)" style="width: 70px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 2px 5px;">
+        </div>
+        <div>
+          <button onclick="toggleDisponible(${p.id})" style="background: ${p.disponible ? '#2e7d32' : '#c62828'}; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+            ${p.disponible ? '🟢 DISPONIBLE' : '🔴 AGOTADO'}
+          </button>
+        </div>
+      `;
+      contenedorProds.appendChild(item);
+    });
+
+    // Renderizar Pedidos
+    document.getElementById('countPedidos').innerText = historialPedidos.length;
+    const contenedorPedidos = document.getElementById('listaAdminPedidos');
+    if (historialPedidos.length === 0) {
+      contenedorPedidos.innerHTML = '<p style="color: #888;">No hay pedidos registrados todavía.</p>';
+    } else {
+      contenedorPedidos.innerHTML = historialPedidos.map((ped, index) => `
+        <div style="background: #222; padding: 10px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid #ff5722;">
+          <small style="color: #aaa;">${ped.fecha}</small>
+          <p style="margin: 5px 0;"><strong>Detalle:</strong> ${ped.detalle}</p>
+          <p style="margin: 0; color: #ff5722; font-weight: bold;">Total: $${ped.total}</p>
+        </div>
+      `).join('');
+    }
+  }
+
+  function registrarPedido(detalle, total) {
+    const nuevoPedido = {
+      fecha: new Date().toLocaleString(),
+      detalle: detalle,
+      total: total
+    };
+    historialPedidos.unshift(nuevoPedido);
+    guardarDatos();
+  }
+
+  function limpiarPedidos() {
+    if (confirm("¿Deseas borrar todo el historial de pedidos?")) {
+      historialPedidos = [];
+      guardarDatos();
+    }
+  }
+</script>
 </body>
 </html>
