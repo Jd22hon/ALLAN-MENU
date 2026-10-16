@@ -3,648 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOGŌN Food N Grill | Menú Interactivo</title>
+    <title>FOGON - FOOD N GRILL</title>
     <style>
-        :root {
-            --orange-fire: #ff5500;
-            --orange-glow: rgba(255, 85, 0, 0.85);
-            --green-fogon: #0d3b2e;
-            --green-accent: #1e6b52;
-            --gold-accent: #e6a100;
-            --cream-bg: #111111;
-            --card-bg: #1c1c1c;
-            --text-light: #ffffff;
-            --text-gray: #b0b0b0;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        html { scroll-behavior: smooth; }
-        body { background-color: var(--cream-bg); color: var(--text-light); padding-bottom: 90px; }
-
-        /* PORTADA A PANTALLA COMPLETA CON TU FOTO REAL */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            overflow: hidden;
-            background: url('https://i.postimg.cc/3wwvg4kM/fondo-jpg.png') center/cover no-repeat;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .neon-title-black {
-            font-size: 5.5rem;
-            font-weight: 900;
-            letter-spacing: 8px;
-            color: #050505;
-            text-transform: uppercase;
-            text-shadow: 
-                0 0 10px #ff5500,
-                0 0 25px #ff5500,
-                0 0 50px rgba(255, 85, 0, 0.8),
-                0 0 80px rgba(255, 85, 0, 0.5);
-            margin-bottom: 5px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: #fff;
-            font-weight: bold;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 4px #000;
-        }
-
-        .btn-hero {
-            padding: 16px 32px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-decoration: none;
-            display: inline-block;
-            margin: 8px;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-hero:hover { transform: scale(1.05); }
-        .btn-primary { background: var(--orange-fire); color: white; box-shadow: 0 4px 20px var(--orange-glow); }
-        .btn-outline { background: rgba(0,0,0,0.7); color: white; border: 2px solid var(--orange-fire); }
-
-        /* CONTENEDOR GENERAL DEL MENÚ */
-        .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: #fff; margin: 0; padding: 0; }
+        header { text-align: center; padding: 30px 20px; background: #1a1a1a; border-bottom: 3px solid #ff5722; }
+        h1.neon-title { font-size: 3.5rem; color: #ff5722; margin: 0; font-weight: 900; letter-spacing: 2px; }
+        p.subtitle { font-size: 1.1rem; color: #aaa; margin-top: 5px; text-transform: uppercase; letter-spacing: 3px; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; padding-bottom: 100px; }
+        .category-title { color: #ff5722; border-bottom: 2px solid #333; padding-bottom: 8px; margin-top: 35px; font-size: 1.4rem; text-transform: uppercase; }
+        .product-card { display: flex; justify-content: space-between; align-items: center; background: #1e1e1e; padding: 15px; margin-bottom: 12px; border-radius: 8px; border-left: 4px solid #ff5722; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .product-info h4 { margin: 0 0 5px 0; color: #fff; font-size: 1.1rem; }
+        .product-info p { margin: 0; font-size: 0.85rem; color: #aaa; }
+        .product-price { font-weight: bold; color: #ff5722; font-size: 1.2rem; margin-right: 15px; }
+        .btn-add { background: #ff5722; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-add:disabled { background: #555; cursor: not-allowed; }
         
-        #menu-wrapper {
-            display: none;
-            padding-top: 30px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* PESTAÑAS DE NAVEGACIÓN */
-        .categories-nav {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-            background: rgba(17, 17, 17, 0.95);
-            padding: 12px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid #333;
-        }
-
-        .cat-tab {
-            background: #222;
-            color: #ccc;
-            border: 1px solid #333;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .cat-tab.active, .cat-tab:hover {
-            background: var(--green-accent);
-            color: white;
-            border-color: var(--orange-fire);
-            box-shadow: 0 0 10px rgba(30, 107, 82, 0.5);
-        }
-
-        .category-title {
-            color: var(--gold-accent);
-            font-size: 1.6rem;
-            text-transform: uppercase;
-            border-bottom: 2px solid var(--green-accent);
-            padding-bottom: 8px;
-            margin: 30px 0 15px;
-            letter-spacing: 2px;
-        }
-
-        /* TARJETAS DE PLATOS */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
-        }
-
-        .menu-card {
-            background: var(--card-bg);
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .menu-card:hover { border-color: var(--orange-fire); transform: translateY(-3px); }
-
-        .menu-card.sold-out { opacity: 0.5; background: #151515; }
-
-        .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .item-name { font-size: 1.1rem; font-weight: bold; color: #fff; }
-        .item-price { font-size: 1.1rem; font-weight: bold; color: var(--gold-accent); }
-        .item-desc { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 15px; line-height: 1.4; }
-
-        .badge-sold { background: #c0392b; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; }
-
-        .btn-add {
-            background: var(--green-accent);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        .btn-add:hover { background: var(--orange-fire); }
-        .btn-add:disabled { background: #444; cursor: not-allowed; }
-
-        /* CARRITO FLOTANTE */
-        .cart-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(20, 20, 20, 0.95);
-            border-top: 2px solid var(--orange-fire);
-            padding: 15px 25px;
-            display: none; justify-content: space-between; align-items: center;
-            z-index: 1000; backdrop-filter: blur(10px);
-        }
-        .btn-whatsapp { background: #25d366; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; }
-
-        /* VENTANAS MODALES */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; padding: 15px;
-        }
-        .modal-box {
-            background: #1e1e1e; color: white; border-radius: 14px; padding: 25px; width: 100%; max-width: 450px;
-            border: 1px solid #333;
-        }
-        .modal-box input, .modal-box select, .modal-box textarea {
-            width: 100%; padding: 10px; margin: 8px 0 15px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 8px;
-        }
-        .btn-close { background: #444; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 5px; }
+        #carritoFlotante { position: fixed; bottom: 20px; right: 20px; background: #ff5722; color: white; padding: 14px 22px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,87,34,0.4); z-index: 100; font-size: 1.05rem; }
+        
+        #modalPedido { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a1a; width: 90%; max-width: 480px; padding: 22px; border-radius: 12px; border: 1px solid #444; color: #fff; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body>
 
-    <!-- PORTADA / HERO -->
-    <section class="hero" id="hero-section">
-        <div class="hero-content">
-            <h1 class="neon-title-black">FOGON</h1>
-            <p class="hero-subtitle">FOOD N GRILL </p>
-            <div>
-                <button class="btn-hero btn-primary" onclick="abrirMenu()">🔥 Ver Menú Interactivo</button>
-                <a href="#contacto" class="btn-hero btn-outline" onclick="abrirMenu()">📍 Ubicación & Horarios</a>
+    <header>
+        <h1 class="neon-title">FOGON</h1>
+        <p class="subtitle">FOOD N GRILL</p>
+        <div style="margin-top: 15px;">
+            <button onclick="accederAdmin()" style="background: #252525; color: #aaa; border: 1px solid #444; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">
+                🔐 Modo Moderador
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="menuContainer"></div>
+    </div>
+
+    <div id="carritoFlotante" onclick="abrirCheckout()">
+        🛒 Ver Pedido (<span id="cartCount">0</span>) - $<span id="cartTotal">0.00</span>
+    </div>
+
+    <!-- PANEL DE MODERADOR -->
+    <div id="panelAdmin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; overflow-y: auto; padding: 20px 10px;">
+        <div style="background: #181818; color: #fff; padding: 20px; border-radius: 10px; max-width: 700px; margin: 20px auto; border: 2px solid #ff5722;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 style="margin: 0; color: #ff5722; font-size: 1.3rem;">🛠️ Panel de Control - FOGON</h2>
+                <button onclick="cerrarAdmin()" style="background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">Cerrar</button>
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="verPestanaAdmin('productos')" style="flex: 1; padding: 10px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">📦 Disponibilidad / Precios</button>
+                <button onclick="verPestanaAdmin('pedidos')" style="flex: 1; padding: 10px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">📋 Historial (<span id="countPedidos">0</span>)</button>
+            </div>
+            <div id="adminSeccionProductos">
+                <div id="listaAdminProductos" style="max-height: 400px; overflow-y: auto;"></div>
+            </div>
+            <div id="adminSeccionPedidos" style="display: none;">
+                <div id="listaAdminPedidos" style="max-height: 400px; overflow-y: auto;"></div>
+                <button onclick="limpiarPedidos()" style="margin-top: 15px; background: #555; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Limpiar Historial</button>
             </div>
         </div>
-    </section>
-
-    <!-- CONTENEDOR DEL MENÚ -->
-    <div id="menu-wrapper" class="container">
-        
-        <!-- PESTAÑAS DE FILTRO -->
-        <div class="categories-nav">
-            <button class="cat-tab active" onclick="filtrarMenu('todos')">Todos</button>
-            <button class="cat-tab" onclick="filtrarMenu('entradas')">Entradas</button>
-            <button class="cat-tab" onclick="filtrarMenu('especiales')">Especiales</button>
-            <button class="cat-tab" onclick="filtrarMenu('cortes')">Cortes & Res</button>
-            <button class="cat-tab" onclick="filtrarMenu('fuertes')">Platos Fuertes</button>
-            <button class="cat-tab" onclick="filtrarMenu('mariscos')">Mariscos</button>
-            <button class="cat-tab" onclick="filtrarMenu('ninos')">Niños</button>
-            <button class="cat-tab" onclick="filtrarMenu('bebidas')">Bebidas & Bar</button>
-        </div>
-
-        <div id="menu-content"></div>
-
-        <!-- SECCIÓN CONTACTO -->
-        <section id="contacto" style="background: #1c1c1c; border-radius: 14px; padding: 25px; margin: 40px 0; border: 1px solid #333;">
-            <h3 style="color: var(--gold-accent); margin-bottom: 12px;">Información & Contacto</h3>
-            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 6px;"><strong>Ubicación:</strong> Salinas, Ecuador</p>
-            <p style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 6px;"><strong>WhatsApp:</strong> +593 99 219 1545</p>
-            <p style="color: var(--text-gray); font-size: 0.95rem;"><strong>Instagram:</strong> <a href="https://www.instagram.com/fogon.ec/" target="_blank" style="color: var(--orange-fire); text-decoration: none;">@fogon.ec ↗</a></p>
-        </section>
     </div>
 
-    <!-- BARRA FLOTANTE DE PEDIDO -->
-    <div class="cart-bar" id="cart-bar">
-        <div style="font-size: 1.05rem; font-weight: bold;">
-            <span id="cart-count" style="color: var(--gold-accent);">0</span> ítems | Total: $<span id="cart-total" style="color: var(--gold-accent);">0.00</span>
-        </div>
-        <button class="btn-whatsapp" onclick="abrirCheckout()">💬 Finalizar Pedido WhatsApp</button>
-    </div>
-
-    <!-- MODAL PERSONALIZACIÓN (GUARNICIONES) -->
-    <div class="modal" id="modal-options">
-        <div class="modal-box">
-            <h3 id="mod-title" style="color: var(--gold-accent); margin-bottom: 6px;">Personalizar plato</h3>
-            <p id="mod-desc" style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;"></p>
+    <!-- MODAL DE CHECKOUT Y FACTURACIÓN -->
+    <div id="modalPedido">
+        <div class="modal-content">
+            <h3 style="color: #ff5722; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 8px;">Resumen de tu Pedido</h3>
+            <div id="resumenCarrito" style="max-height: 160px; overflow-y: auto; margin-bottom: 15px; font-size: 0.95rem; line-height: 1.5;"></div>
             
-            <div id="side-select-group">
-                <label style="font-size: 0.9rem; font-weight: bold;">Elige tu Guarnición Acompañante:</label>
-                <select id="mod-side">
-                    <option value="Moro Fogón">Moro Fogón</option>
-                    <option value="Moro Choclo">Moro Choclo</option>
-                    <option value="Tacu Tacu">Tacu Tacu</option>
-                    <option value="Moro Clásico">Moro Clásico</option>
-                    <option value="Papa Gratinada">Papa Gratinada</option>
-                    <option value="Ensalada y Papas Fritas">Ensalada y Papas Fritas</option>
-                </select>
+            <div style="background: #222; padding: 12px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #333;">
+                <label style="font-weight: bold; font-size: 0.95rem; display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="requiereFactura" onchange="toggleFacturaFields()" style="transform: scale(1.3); margin-right: 10px;">
+                    ¿Desea Factura Electrónica?
+                </label>
+                <div id="camposFactura" style="display: none; margin-top: 12px;">
+                    <input type="text" id="facNombre" placeholder="Nombre / Razón Social" style="width: 100%; padding: 8px; margin-bottom: 8px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                    <input type="text" id="facRuc" placeholder="RUC / Cédula" style="width: 100%; padding: 8px; margin-bottom: 8px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                    <input type="text" id="facDireccion" placeholder="Dirección Fiscal" style="width: 100%; padding: 8px; margin-bottom: 8px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                    <input type="email" id="facCorreo" placeholder="Correo Electrónico" style="width: 100%; padding: 8px; background: #333; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box;">
+                </div>
             </div>
 
-            <label style="font-size: 0.9rem; font-weight: bold; display: block; margin-top: 10px;">Nota o término (ej. término medio, sin cebolla):</label>
-            <input type="text" id="mod-note" placeholder="Ej: Término medio">
-
-            <button class="btn-hero btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;" onclick="agregarAlCarritoConfirmado()">Agregar al Carrito</button>
-            <button class="btn-close" onclick="cerrarModal('modal-options')">Cancelar</button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="enviarWhatsApp()" style="flex: 2; background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">🚀 Enviar por WhatsApp</button>
+                <button onclick="cerrarCheckout()" style="flex: 1; background: #444; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">Cerrar</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL CHECKOUT CLIENTE -->
-    <div class="modal" id="modal-checkout">
-        <div class="modal-box">
-            <h3 style="color: var(--gold-accent); margin-bottom: 15px;">🔥 Confirmar Pedido - FOGŌN</h3>
-            
-            <label style="font-size: 0.9rem;">Tu Nombre:</label>
-            <input type="text" id="cli-name" placeholder="Ej. Carlos Mendoza">
-
-            <label style="font-size: 0.9rem;">Tipo de Servicio:</label>
-            <select id="cli-type">
-                <option value="Para Comer en el Local">Para Comer en el Local</option>
-                <option value="Para Llevar (Retiro)">Para Llevar (Retiro)</option>
-                <option value="A Domicilio">A Domicilio</option>
-            </select>
-
-            <label style="font-size: 0.9rem;">Instrucción extra (Opcional):</label>
-            <textarea id="cli-obs" rows="2" placeholder="Dirección de entrega o detalles..."></textarea>
-
-            <div id="cli-summary" style="background: #151515; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; max-height: 120px; overflow-y: auto;"></div>
-
-            <button class="btn-whatsapp" style="width: 100%; text-align: center; padding: 14px;" onclick="enviarPedidoWhatsApp()">🚀 Enviar Pedido a WhatsApp</button>
-            <button class="btn-close" onclick="cerrarModal('modal-checkout')">Seguir viendo</button>
-        </div>
-    </div>
     <script>
-        // BASE DE DATOS OFICIAL SEGÚN PDF DE FOGÓN CON CONTROL DE AGOTADOS (agotado: true/false)
-        const menuOriginal = [... ];
-        let productos = JSON.parse(localStorage.getItem('fogon_productos')) || menuOriginal;
-    // ENTRADAS
-    { id: 1, categoria: "ENTRADAS", nombre: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo con tocino", precio: 5.99, disponible: true },
-    { id: 2, categoria: "ENTRADAS", nombre: "Patacones con queso", desc: "Porción de patacones con queso rallado", precio: 5.99, disponible: true },
-    { id: 3, categoria: "ENTRADAS", nombre: "Porción de chorizo parrillero", desc: "3 chorizos al grill con chimichurri y ensalada", precio: 4.03, disponible: true },
-    
-    // ESPECIALES
-    { id: 4, categoria: "ESPECIALES", nombre: "Lomo fino con papa gratinada", desc: "Lomo al grill con papa cocida, bechamel y mozzarella", precio: 17.33, disponible: true },
-    { id: 5, categoria: "ESPECIALES", nombre: "Lomo fino a la pimienta con arroz al pesto", desc: "Salsa de pimienta, arroz al pesto y papas fritas", precio: 17.33, disponible: true },
-    { id: 6, categoria: "ESPECIALES", nombre: "Lasaña de carne", desc: "Pasta rellena con carne, mozzarella y crema bechamel", precio: 9.20, disponible: true },
-
-    // PLATOS FUERTES
-    { id: 7, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
-    { id: 8, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
-    { id: 9, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 15.93, disponible: true },
-    { id: 10, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 14.99, disponible: true },
-    { id: 11, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Clásico", desc: "Acompañado de moro clásico", precio: 14.99, disponible: true },
-    { id: 12, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
-    { id: 13, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Ensalada y papas fritas", desc: "Acompañado de ensalada y papas fritas", precio: 14.99, disponible: true },
-    { id: 14, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
-    { id: 15, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
-    { id: 16, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 12.07, disponible: true },
-    { id: 17, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 10.35, disponible: true },
-    { id: 18, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
-    { id: 19, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 12.07, disponible: true },
-    { id: 20, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 10.93, disponible: true },
-    { id: 21, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 10.93, disponible: true },
-    { id: 22, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 9.20, disponible: true },
-    { id: 23, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
-    { id: 24, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
-    { id: 25, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
-    { id: 26, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
-    { id: 27, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
-    { id: 28, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
-
-    // CORTES PREMIUM
-    { id: 29, categoria: "CORTES PREMIUM", nombre: "Picaña 350 GR", desc: "Corte premium a la parrilla", precio: 21.85, disponible: true },
-    { id: 30, categoria: "CORTES PREMIUM", nombre: "Bife de Chorizo 350 GR", desc: "Corte jugoso y selecto", precio: 21.85, disponible: true },
-    { id: 31, categoria: "CORTES PREMIUM", nombre: "Ribeye 350 GR", desc: "Excelente marmoleado al grill", precio: 19.55, disponible: true },
-    { id: 32, categoria: "CORTES PREMIUM", nombre: "T-Bone 350 GR", desc: "El balance perfecto entre lomo y filete", precio: 19.55, disponible: true },
-    { id: 33, categoria: "CORTES PREMIUM", nombre: "Matambre de Cerdo 350 GR", desc: "Corte de cerdo premium", precio: 14.66, disponible: true },
-
-    // COSTILLAS AHUMADAS BBQ
-    { id: 34, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Tacu Tacu", desc: "1 libra de costillas con Tacu Tacu", precio: 17.50, disponible: true },
-    { id: 35, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Moro Choclo", desc: "1 libra de costillas con Moro Choclo", precio: 16.50, disponible: true },
-    { id: 36, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Arroz y menestra", desc: "1 libra de costillas con arroz y menestra", precio: 14.50, disponible: true },
-    { id: 37, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Ensalada y papas", desc: "1 libra de costillas con ensalada y papas", precio: 14.50, disponible: true },
-
-    // GUARNICIONES
-    { id: 38, categoria: "GUARNICIONES", nombre: "Tacu Tacu", desc: "Porción de tacu tacu", precio: 6.33, disponible: true },
-    { id: 39, categoria: "GUARNICIONES", nombre: "Papa gratinada", desc: "Con bechamel y queso", precio: 5.75, disponible: true },
-    { id: 40, categoria: "GUARNICIONES", nombre: "Moro Fogón", desc: "Moro especial de la casa", precio: 5.18, disponible: true },
-    { id: 41, categoria: "GUARNICIONES", nombre: "Papas fritas", desc: "Porción crujiente", precio: 4.25, disponible: true },
-    { id: 42, categoria: "GUARNICIONES", nombre: "Porción de arroz", desc: "Arroz blanco", precio: 1.73, disponible: true },
-    { id: 43, categoria: "GUARNICIONES", nombre: "Porción de menestra", desc: "Menestra del día", precio: 2.50, disponible: true },
-
-    // MARISCOS
-    { id: 44, categoria: "MARISCOS", nombre: "Majarisco", desc: "Mariscos con verde majado y toque de Fogón", precio: 17.33, disponible: true },
-    { id: 45, categoria: "MARISCOS", nombre: "Arroz con cangrejo", desc: "Combinación de arroz y carne de cangrejo", precio: 14.95, disponible: true },
-    { id: 46, categoria: "MARISCOS", nombre: "Sudado de mariscos", desc: "Guiso tradicional al vapor", precio: 17.33, disponible: true },
-    { id: 47, categoria: "MARISCOS", nombre: "Arroz marinero", desc: "Arroz con variedad de mariscos", precio: 15.53, disponible: true },
-    { id: 48, categoria: "MARISCOS", nombre: "Arroz con camarón", desc: "Delicioso arroz con camarones", precio: 14.95, disponible: true },
-
-    // MENÚ DE NIÑOS
-    { id: 49, categoria: "MENÚ DE NIÑOS", nombre: "Nuggets de pollo", desc: "Pollo apanado con papas fritas", precio: 5.99, disponible: true },
-    { id: 50, categoria: "MENÚ DE NIÑOS", nombre: "Papas fritas con chorizo", desc: "Chorizo a la parrilla con papas", precio: 5.99, disponible: true },
-
-    // BEBIDAS & BAR
-    { id: 51, categoria: "BEBIDAS", nombre: "Gaseosa", desc: "Bebida personal", precio: 1.44, disponible: true },
-    { id: 52, categoria: "BEBIDAS", nombre: "Limonada Imperial", desc: "Refrescante limonada de la casa", precio: 3.45, disponible: true },
-    { id: 53, categoria: "BEBIDAS", nombre: "Jarra de jugo de naranja", desc: "Natural y recién exprimido", precio: 8.05, disponible: true },
-    { id: 54, categoria: "BEBIDAS", nombre: "Mojito", desc: "Cóctel tradicional de barra", precio: 7.99, disponible: true },
-    { id: 55, categoria: "BEBIDAS", nombre: "Piña Colada", desc: "Cóctel tropical", precio: 7.99, disponible: true }
-];
-
-        let carrito = [];
-        let itemTemporal = null;
-
-        function abrirMenu() {
-            document.getElementById('menu-wrapper').style.display = 'block';
-            document.getElementById('menu-wrapper').scrollIntoView({ behavior: 'smooth' });
-            renderizarMenu('todos');
-        }
-
-        function filtrarMenu(categoria) {
-            document.querySelectorAll('.cat-tab').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderizarMenu(categoria);
-        }
-
-        function renderizarMenu(catFiltro) {
-            const container = document.getElementById('menu-content');
-            container.innerHTML = '';
-
-            const categoriasAMostrar = catFiltro === 'todos' ? ['entradas', 'especiales', 'cortes', 'fuertes', 'mariscos', 'ninos', 'bebidas'] : [catFiltro];
+        const menuOriginal = [
+            // ENTRADAS
+            { id: 1, categoria: "ENTRADAS", nombre: "Papas Fogón", desc: "Papas salteadas en mantequilla y ajo con tocino", precio: 5.99, disponible: true },
+            { id: 2, categoria: "ENTRADAS", nombre: "Patacones con queso", desc: "Porción de patacones con queso rallado", precio: 5.99, disponible: true },
+            { id: 3, categoria: "ENTRADAS", nombre: "Porción de chorizo parrillero", desc: "3 chorizos al grill con chimichurri y ensalada", precio: 4.03, disponible: true },
             
-            const nombresCat = {
-                entradas: 'Entradas',
-                especiales: 'Especiales del Chef',
-                cortes: 'Cortes & Res Premium',
-                fuertes: 'Platos Fuertes',
-                mariscos: 'Mariscos',
-                ninos: 'Menú de Niños',
-                bebidas: 'Bebidas & Bar'
-            };
+            // ESPECIALES
+            { id: 4, categoria: "ESPECIALES", nombre: "Lomo fino con papa gratinada", desc: "Lomo al grill con papa cocida, bechamel y mozzarella", precio: 17.33, disponible: true },
+            { id: 5, categoria: "ESPECIALES", nombre: "Lomo fino a la pimienta con arroz al pesto", desc: "Salsa de pimienta, arroz al pesto y papas fritas", precio: 17.33, disponible: true },
+            { id: 6, categoria: "ESPECIALES", nombre: "Lasaña de carne", desc: "Pasta rellena con carne, mozzarella y crema bechamel", precio: 9.20, disponible: true },
 
-            categoriasAMostrar.forEach(cat => {
-                const items = dbMenu.filter(i => i.cat === cat);
-                if (items.length === 0) return;
+            // PLATOS FUERTES
+            { id: 7, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+            { id: 8, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+            { id: 9, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 15.93, disponible: true },
+            { id: 10, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 14.99, disponible: true },
+            { id: 11, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Moro Clásico", desc: "Acompañado de moro clásico", precio: 14.99, disponible: true },
+            { id: 12, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
+            { id: 13, categoria: "PLATOS FUERTES", nombre: "Lomo Fino - Ensalada y papas fritas", desc: "Acompañado de ensalada y papas fritas", precio: 14.99, disponible: true },
+            { id: 14, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+            { id: 15, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+            { id: 16, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 12.07, disponible: true },
+            { id: 17, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Moro y menestra", desc: "Acompañado de moro y menestra", precio: 10.35, disponible: true },
+            { id: 18, categoria: "PLATOS FUERTES", nombre: "Costilla de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
+            { id: 19, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 12.07, disponible: true },
+            { id: 20, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 10.93, disponible: true },
+            { id: 21, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Moro Fogón", desc: "Acompañado de Moro Fogón", precio: 10.93, disponible: true },
+            { id: 22, categoria: "PLATOS FUERTES", nombre: "Pollo de Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 9.20, disponible: true },
+            { id: 23, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 13.23, disponible: true },
+            { id: 24, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 12.07, disponible: true },
+            { id: 25, categoria: "PLATOS FUERTES", nombre: "Chuleta de Cerdo - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 10.35, disponible: true },
+            { id: 26, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Tacu Tacu", desc: "Acompañado de Tacu Tacu", precio: 16.95, disponible: true },
+            { id: 27, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Moro Choclo", desc: "Acompañado de Moro Choclo", precio: 15.93, disponible: true },
+            { id: 28, categoria: "PLATOS FUERTES", nombre: "Picudo al Grill - Arroz y menestra", desc: "Acompañado de arroz y menestra", precio: 14.99, disponible: true },
 
-                let html = `<h2 class="category-title">${nombresCat[cat]}</h2><div class="menu-grid">`;
-                
-                items.forEach(item => {
-                    html += `
-                        <div class="menu-card ${item.agotado ? 'sold-out' : ''}">
-                            <div>
-                                <div class="item-header">
-                                    <span class="item-name">${item.name} ${item.agotado ? '<span class="badge-sold">AGOTADO</span>' : ''}</span>
-                                    <span class="item-price">$${item.price.toFixed(2)}</span>
-                                </div>
-                                <p class="item-desc">${item.desc}</p>
-                            </div>
-                            <button class="btn-add" ${item.agotado ? 'disabled' : ''} onclick="pedirItem(${item.id})">
-                                ${item.agotado ? 'Agotado' : '+ Agregar'}
+            // CORTES PREMIUM
+            { id: 29, categoria: "CORTES PREMIUM", nombre: "Picaña 350 GR", desc: "Corte premium a la parrilla", precio: 21.85, disponible: true },
+            { id: 30, categoria: "CORTES PREMIUM", nombre: "Bife de Chorizo 350 GR", desc: "Corte jugoso y selecto", precio: 21.85, disponible: true },
+            { id: 31, categoria: "CORTES PREMIUM", nombre: "Ribeye 350 GR", desc: "Excelente marmoleado al grill", precio: 19.55, disponible: true },
+            { id: 32, categoria: "CORTES PREMIUM", nombre: "T-Bone 350 GR", desc: "El balance perfecto entre lomo y filete", precio: 19.55, disponible: true },
+            { id: 33, categoria: "CORTES PREMIUM", nombre: "Matambre de Cerdo 350 GR", desc: "Corte de cerdo premium", precio: 14.66, disponible: true },
+
+            // COSTILLAS AHUMADAS BBQ
+            { id: 34, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Tacu Tacu", desc: "1 libra de costillas con Tacu Tacu", precio: 17.50, disponible: true },
+            { id: 35, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Moro Choclo", desc: "1 libra de costillas con Moro Choclo", precio: 16.50, disponible: true },
+            { id: 36, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Arroz y menestra", desc: "1 libra de costillas con arroz y menestra", precio: 14.50, disponible: true },
+            { id: 37, categoria: "COSTILLAS AHUMADAS BBQ", nombre: "Costillas BBQ - Ensalada y papas", desc: "1 libra de costillas con ensalada y papas", precio: 14.50, disponible: true },
+
+            // GUARNICIONES
+            { id: 38, categoria: "GUARNICIONES", nombre: "Tacu Tacu", desc: "Porción de tacu tacu", precio: 6.33, disponible: true },
+            { id: 39, categoria: "GUARNICIONES", nombre: "Papa gratinada", desc: "Con bechamel y queso", precio: 5.75, disponible: true },
+            { id: 40, categoria: "GUARNICIONES", nombre: "Moro Fogón", desc: "Moro especial de la casa", precio: 5.18, disponible: true },
+            { id: 41, categoria: "GUARNICIONES", nombre: "Papas fritas", desc: "Porción crujiente", precio: 4.25, disponible: true },
+            { id: 42, categoria: "GUARNICIONES", nombre: "Porción de arroz", desc: "Arroz blanco", precio: 1.73, disponible: true },
+            { id: 43, categoria: "GUARNICIONES", nombre: "Porción de menestra", desc: "Menestra del día", precio: 2.50, disponible: true },
+
+            // MARISCOS
+            { id: 44, categoria: "MARISCOS", nombre: "Majarisco", desc: "Mariscos con verde majado y toque de Fogón", precio: 17.33, disponible: true },
+            { id: 45, categoria: "MARISCOS", nombre: "Arroz con cangrejo", desc: "Combinación de arroz y carne de cangrejo", precio: 14.95, disponible: true },
+            { id: 46, categoria: "MARISCOS", nombre: "Sudado de mariscos", desc: "Guiso tradicional al vapor", precio: 17.33, disponible: true },
+            { id: 47, categoria: "MARISCOS", nombre: "Arroz marinero", desc: "Arroz con variedad de mariscos", precio: 15.53, disponible: true },
+            { id: 48, categoria: "MARISCOS", nombre: "Arroz con camarón", desc: "Delicioso arroz con camarones", precio: 14.95, disponible: true },
+
+            // MENÚ DE NIÑOS
+            { id: 49, categoria: "MENÚ DE NIÑOS", nombre: "Nuggets de pollo", desc: "Pollo apanado con papas fritas", precio: 5.99, disponible: true },
+            { id: 50, categoria: "MENÚ DE NIÑOS", nombre: "Papas fritas con chorizo", desc: "Chorizo a la parrilla con papas", precio: 5.99, disponible: true },
+
+            // BEBIDAS & BAR
+            { id: 51, categoria: "BEBIDAS", nombre: "Gaseosa", desc: "Bebida personal", precio: 1.44, disponible: true },
+            { id: 52, categoria: "BEBIDAS", nombre: "Limonada Imperial", desc: "Refrescante limonada de la casa", precio: 3.45, disponible: true },
+            { id: 53, categoria: "BEBIDAS", nombre: "Jarra de jugo de naranja", desc: "Natural y recién exprimido", precio: 8.05, disponible: true },
+            { id: 54, categoria: "BEBIDAS", nombre: "Mojito", desc: "Cóctel tradicional de barra", precio: 7.99, disponible: true },
+            { id: 55, categoria: "BEBIDAS", nombre: "Piña Colada", desc: "Cóctel tropical", precio: 7.99, disponible: true }
+        ];
+
+        let productos = JSON.parse(localStorage.getItem('fogon_productos')) || menuOriginal;
+        let carrito = [];
+        let historialPedidos = JSON.parse(localStorage.getItem('fogon_pedidos')) || [];
+
+        function renderizarMenu() {
+            const container = document.getElementById('menuContainer');
+            container.innerHTML = "";
+            const categorias = [...new Set(productos.map(p => p.categoria))];
+
+            categorias.forEach(cat => {
+                const tituloCat = document.createElement('h3');
+                tituloCat.className = 'category-title';
+                tituloCat.innerText = cat;
+                container.appendChild(tituloCat);
+
+                const prodsCat = productos.filter(p => p.categoria === cat);
+                prodsCat.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="product-info">
+                            <h4>${p.nombre}</h4>
+                            <p>${p.desc}</p>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span class="product-price">$${p.precio.toFixed(2)}</span>
+                            <button class="btn-add" ${!p.disponible ? 'disabled' : ''} onclick="agregarCarrito(${p.id})">
+                                ${p.disponible ? 'Agregar' : 'AGOTADO'}
                             </button>
                         </div>
                     `;
+                    container.appendChild(card);
                 });
-
-                html += `</div>`;
-                container.innerHTML += html;
             });
+            actualizarCarritoUI();
         }
 
-        function pedirItem(id) {
-            const item = dbMenu.find(i => i.id === id);
-            if (!item || item.agotado) return;
-
-            itemTemporal = { ...item, side: '', note: '' };
-
-            if (item.sides) {
-                document.getElementById('mod-title').innerText = item.name;
-                document.getElementById('mod-desc').innerText = item.desc;
-                document.getElementById('side-select-group').style.display = 'block';
-                document.getElementById('modal-options').style.display = 'flex';
-            } else {
-                document.getElementById('mod-title').innerText = item.name;
-                document.getElementById('mod-desc').innerText = item.desc;
-                document.getElementById('side-select-group').style.display = 'none';
-                document.getElementById('modal-options').style.display = 'flex';
+        function agregarCarrito(id) {
+            const prod = productos.find(p => p.id === id);
+            if (prod && prod.disponible) {
+                carrito.push(prod);
+                actualizarCarritoUI();
             }
         }
 
-        function agregarAlCarritoConfirmado() {
-            if (itemTemporal.sides) {
-                itemTemporal.side = document.getElementById('mod-side').value;
-            }
-            itemTemporal.note = document.getElementById('mod-note').value.trim();
-
-            carrito.push(itemTemporal);
-            cerrarModal('modal-options');
-            document.getElementById('mod-note').value = '';
-            actualizarBarraCarrito();
-        }
-
-        function actualizarBarraCarrito() {
-            const bar = document.getElementById('cart-bar');
-            if (carrito.length > 0) {
-                bar.style.display = 'flex';
-                document.getElementById('cart-count').innerText = carrito.length;
-                const total = carrito.reduce((sum, i) => sum + i.price, 0);
-                document.getElementById('cart-total').innerText = total.toFixed(2);
-            } else {
-                bar.style.display = 'none';
-            }
+        function actualizarCarritoUI() {
+            const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+            document.getElementById('cartCount').innerText = carrito.length;
+            document.getElementById('cartTotal').innerText = total.toFixed(2);
         }
 
         function abrirCheckout() {
-            const summary = document.getElementById('cli-summary');
-            summary.innerHTML = '<strong>Platos seleccionados:</strong><br>';
-            carrito.forEach((i, idx) => {
-                summary.innerHTML += `
-                    <div style="margin-top: 4px;">
-                        ${idx + 1}. ${i.name} - $${i.price.toFixed(2)}
-                        ${i.side ? `<br><small style="color:var(--gold-accent);">   └ Guarnición: ${i.side}</small>` : ''}
-                        ${i.note ? `<br><small style="color:#aaa;">   └ Nota: ${i.note}</small>` : ''}
-                    </div>
-                `;
-            });
-            document.getElementById('modal-checkout').style.display = 'flex';
-        }
-
-        function cerrarModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function enviarPedidoWhatsApp() {
-            const nombre = document.getElementById('cli-name').value.trim();
-            const tipo = document.getElementById('cli-type').value;
-            const obs = document.getElementById('cli-obs').value.trim();
-
-            if (!nombre) {
-                alert('Por favor ingresa tu nombre para el pedido.');
+            if (carrito.length === 0) {
+                alert("Tu carrito está vacío.");
                 return;
             }
+            const resumen = document.getElementById('resumenCarrito');
+            resumen.innerHTML = carrito.map(item => `<div>• <strong>${item.nombre}</strong> - $${item.precio.toFixed(2)}</div>`).join('');
+            document.getElementById('modalPedido').style.display = 'flex';
+        }
 
-            let msg = `🔥 *NUEVO PEDIDO - FOGÓN* 🔥%0A%0A`;
-            msg += `👤 *Cliente:* ${nombre}%0A`;
-            msg += `🛵 *Servicio:* ${tipo}%0A`;
-            if (obs) msg += `📝 *Nota:* ${obs}%0A`;
-            msg += `%0A*DETALLE DE ORDEN:*%0A`;
+        function cerrarCheckout() {
+            document.getElementById('modalPedido').style.display = 'none';
+        }
 
-            carrito.forEach((i, idx) => {
-                msg += `${idx + 1}. *${i.name}* ($${i.price.toFixed(2)})%0A`;
-                if (i.side) msg += `   └ Guarnición: ${i.side}%0A`;
-                if (i.note) msg += `   └ Nota: ${i.note}%0A`;
+        function toggleFacturaFields() {
+            const check = document.getElementById('requiereFactura');
+            document.getElementById('camposFactura').style.display = check.checked ? 'block' : 'none';
+        }
+
+        function enviarWhatsApp() {
+            const requiereFac = document.getElementById('requiereFactura').checked;
+            let detalleFac = "";
+            let datosFacObj = null;
+            
+            if (requiereFac) {
+                const nombre = document.getElementById('facNombre').value;
+                const ruc = document.getElementById('facRuc').value;
+                const dir = document.getElementById('facDireccion').value;
+                const correo = document.getElementById('facCorreo').value;
+
+                if (!nombre || !ruc) {
+                    alert("Por favor completa Nombre y RUC/Cédula para la factura.");
+                    return;
+                }
+                datosFacObj = { nombre, ruc, dir, correo };
+                detalleFac = `\n\n🧾 *DATOS DE FACTURACIÓN:*\n• Razón Social: ${nombre}\n• RUC/Cédula: ${ruc}\n• Dirección: ${dir}\n• Correo: ${correo}`;
+            }
+
+            const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+            let textoItems = carrito.map(i => `• ${i.nombre} ($${i.precio.toFixed(2)})`).join('\n');
+            let mensaje = `🔥 *NUEVO PEDIDO - FOGON*\n\n🛒 *DETALLE:*\n${textoItems}\n\n💰 *TOTAL:* $${total.toFixed(2)}${detalleFac}`;
+
+            historialPedidos.unshift({
+                fecha: new Date().toLocaleString(),
+                detalle: carrito.map(i => i.nombre).join(', '),
+                factura: datosFacObj,
+                total: total.toFixed(2)
             });
+            localStorage.setItem('fogon_pedidos', JSON.stringify(historialPedidos));
 
-            const total = carrito.reduce((sum, i) => sum + i.price, 0);
-            msg += `%0A💰 *TOTAL A PAGAR: $${total.toFixed(2)}*`;
-
-            window.open(`https://wa.me/593992191545?text=${msg}`, '_blank');
-        }
-    </script>
-    <!-- BOTÓN DE ACCESO AL MODO MODERADOR -->
-<div style="text-align: center; margin: 20px 0;">
-    <button onclick="accederAdmin()" style="background: #333; color: #aaa; border: 1px solid #555; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;">
-        🔐 Modo Moderador
-    </button>
-</div>
-
-<!-- PANEL FLOTANTE DE MODERADOR -->
-<div id="panelAdmin" style="display: none; background: #181818; color: #fff; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 800px; border: 2px solid #ff5722;">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
-        <h3 style="margin: 0; color: #ff5722;">🛠️ Panel de Control - FOGON</h3>
-        <button onclick="cerrarAdmin()" style="background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Cerrar</button>
-    </div>
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <button onclick="verPestanaAdmin('productos')" style="flex: 1; padding: 8px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">📦 Platos (Disponibles / Agotados)</button>
-        <button onclick="verPestanaAdmin('pedidos')" style="flex: 1; padding: 8px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">📋 Historial de Pedidos</button>
-    </div>
-    <div id="adminSeccionProductos">
-        <div id="listaAdminProductos" style="max-height: 350px; overflow-y: auto;"></div>
-    </div>
-    <div id="adminSeccionPedidos" style="display: none;">
-        <div id="listaAdminPedidos" style="max-height: 350px; overflow-y: auto;"></div>
-        <button onclick="limpiarPedidos()" style="margin-top: 10px; background: #444; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Limpiar Historial</button>
-    </div>
-</div>
-
-<script>
-    // FUNCIONES DEL MODERADOR Y FACTURACIÓN
-    const CLAVE_MODERADOR = "1234";
-
-    function accederAdmin() {
-        const pass = prompt("Ingrese la clave de moderador:");
-        if (pass === CLAVE_MODERADOR) {
-            document.getElementById('panelAdmin').style.display = 'block';
-            renderizarAdmin();
-        } else if (pass !== null) {
-            alert("Clave incorrecta.");
-        }
-    }
-
-    function cerrarAdmin() {
-        document.getElementById('panelAdmin').style.display = 'none';
-    }
-
-    function verPestanaAdmin(pestana) {
-        document.getElementById('adminSeccionProductos').style.display = (pestana === 'productos') ? 'block' : 'none';
-        document.getElementById('adminSeccionPedidos').style.display = (pestana === 'pedidos') ? 'block' : 'none';
-    }
-
-    function toggleDisponibleAdmin(id) {
-        const p = productos.find(item => item.id === id);
-        if (p) {
-            p.disponible = !p.disponible;
-            localStorage.setItem('fogon_productos', JSON.stringify(productos));
-            renderizarAdmin();
+            const url = `https://wa.me/593992191545?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+            
+            carrito = [];
+            cerrarCheckout();
             renderizarMenu();
         }
-    }
 
-    function cambiarPrecioAdmin(id, nuevoPrecio) {
-        const p = productos.find(item => item.id === id);
-        if (p && !isNaN(nuevoPrecio)) {
-            p.precio = parseFloat(nuevoPrecio);
-            localStorage.setItem('fogon_productos', JSON.stringify(productos));
-            renderizarMenu();
+        const CLAVE_MODERADOR = "1234";
+
+        function accederAdmin() {
+            const pass = prompt("Ingrese la clave de moderador:");
+            if (pass === CLAVE_MODERADOR) {
+                document.getElementById('panelAdmin').style.display = 'block';
+                renderizarAdmin();
+            } else if (pass !== null) {
+                alert("Clave incorrecta.");
+            }
         }
-    }
 
-    function renderizarAdmin() {
-        const contenedor = document.getElementById('listaAdminProductos');
-        contenedor.innerHTML = productos.map(p => `
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 8px 12px; margin-bottom: 6px; border-radius: 5px;">
-                <div>
-                    <strong style="font-size: 0.9rem;">${p.nombre}</strong><br>
-                    <small>$</small>
-                    <input type="number" step="0.5" value="${p.precio.toFixed(2)}" onchange="cambiarPrecioAdmin(${p.id}, this.value)" style="width: 70px; background: #333; color: #fff; border: 1px solid #555; padding: 2px;">
-                </div>
-                <button onclick="toggleDisponibleAdmin(${p.id})" style="background: ${p.disponible ? '#2e7d32' : '#c62828'}; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                    ${p.disponible ? '🟢 DISPONIBLE' : '🔴 AGOTADO'}
-                </button>
-            </div>
-        `).join('');
+        function cerrarAdmin() {
+            document.getElementById('panelAdmin').style.display = 'none';
+        }
 
-        const historialPedidos = JSON.parse(localStorage.getItem('fogon_pedidos')) || [];
-        const contenedorPedidos = document.getElementById('listaAdminPedidos');
-        if (historialPedidos.length === 0) {
-            contenedorPedidos.innerHTML = '<p style="color: #888;">No hay pedidos registrados todavía.</p>';
-        } else {
-            contenedorPedidos.innerHTML = historialPedidos.map(ped => `
-                <div style="background: #222; padding: 10px; margin-bottom: 8px; border-radius: 5px; border-left: 3px solid #ff5722;">
-                    <small style="color: #aaa;">${ped.fecha}</small>
-                    <p style="margin: 4px 0;"><strong>Detalle:</strong> ${ped.detalle}</p>
-                    ${ped.factura ? `<p style="margin: 2px 0; color: #4caf50; font-size: 0.85rem;">🧾 Factura: ${ped.factura.nombre} (RUC:${ped.factura.ruc})</p>` : '<p style="margin: 2px 0; color: #888; font-size: 0.85rem;">🧾 Sin Factura</p>'}
-                    <p style="margin: 0; color: #ff5722; font-weight: bold;">Total: $${ped.total}</p>
+        function verPestanaAdmin(pestana) {
+            document.getElementById('adminSeccionProductos').style.display = (pestana === 'productos') ? 'block' : 'none';
+            document.getElementById('adminSeccionPedidos').style.display = (pestana === 'pedidos') ? 'block' : 'none';
+        }
+
+        function toggleDisponibleAdmin(id) {
+            const p = productos.find(item => item.id === id);
+            if (p) {
+                p.disponible = !p.disponible;
+                localStorage.setItem('fogon_productos', JSON.stringify(productos));
+                renderizarAdmin();
+                renderizarMenu();
+            }
+        }
+
+        function cambiarPrecioAdmin(id, nuevoPrecio) {
+            const p = productos.find(item => item.id === id);
+            if (p && !isNaN(nuevoPrecio)) {
+                p.precio = parseFloat(nuevoPrecio);
+                localStorage.setItem('fogon_productos', JSON.stringify(productos));
+                renderizarMenu();
+            }
+        }
+
+        function renderizarAdmin() {
+            const contenedor = document.getElementById('listaAdminProductos');
+            contenedor.innerHTML = productos.map(p => `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #222; padding: 10px; margin-bottom: 8px; border-radius: 6px;">
+                    <div>
+                        <strong style="font-size: 0.95rem;">${p.nombre}</strong><br>
+                        <small>$</small>
+                        <input type="number" step="0.5" value="${p.precio.toFixed(2)}" onchange="cambiarPrecioAdmin(${p.id}, this.value)" style="width: 75px; background: #333; color: #fff; border: 1px solid #555; padding: 3px; border-radius: 4px;">
+                    </div>
+                    <button onclick="toggleDisponibleAdmin(${p.id})" style="background: ${p.disponible ? '#2e7d32' : '#c62828'}; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        ${p.disponible ? '🟢 DISPONIBLE' : '🔴 AGOTADO'}
+                    </button>
                 </div>
             `).join('');
-        }
-    }
 
-    function limpiarPedidos() {
-        if (confirm("¿Borrar el historial de pedidos?")) {
-            localStorage.removeItem('fogon_pedidos');
-            renderizarAdmin();
+            document.getElementById('countPedidos').innerText = historialPedidos.length;
+            const contenedorPedidos = document.getElementById('listaAdminPedidos');
+            if (historialPedidos.length === 0) {
+                contenedorPedidos.innerHTML = '<p style="color: #888;">No hay pedidos registrados todavía.</p>';
+            } else {
+                contenedorPedidos.innerHTML = historialPedidos.map(ped => `
+                    <div style="background: #222; padding: 12px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid #ff5722;">
+                        <small style="color: #aaa;">${ped.fecha}</small>
+                        <p style="margin: 5px 0;"><strong>Platos:</strong> ${ped.detalle}</p>
+                        ${ped.factura ? `<p style="margin: 3px 0; color: #4caf50; font-size: 0.85rem;">🧾 Factura: ${ped.factura.nombre} (RUC:${ped.factura.ruc})</p>` : '<p style="margin: 3px 0; color: #888; font-size: 0.85rem;">🧾 Sin Factura</p>'}
+                        <p style="margin: 0; color: #ff5722; font-weight: bold;">Total: $${ped.total}</p>
+                    </div>
+                `).join('');
+            }
         }
-    }
-</script>
+
+        function limpiarPedidos() {
+            if (confirm("¿Borrar el historial de pedidos?")) {
+                historialPedidos = [];
+                localStorage.removeItem('fogon_pedidos');
+                renderizarAdmin();
+            }
+        }
+
+        renderizarMenu();
+    </script>
 </body>
 </html>
